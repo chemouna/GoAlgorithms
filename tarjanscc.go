@@ -1,7 +1,7 @@
-package tarjanscc
+package main
 
 import (
-	"fmt",
+	"fmt"
 	"math/big"
 )
 
@@ -30,7 +30,7 @@ func tarjanscc(g [][]int, emit func([]int)) {
 	var scc func(int) bool
 	scc = func(v int) bool {
 		index[v] = count
-		lowlink[n] = count
+		lowlink[v] = count
 		visited.SetBit(&visited, v, 1)
 		count++
 		s = append(s, v)
@@ -44,8 +44,7 @@ func tarjanscc(g [][]int, emit func([]int)) {
 				if(lowlink[w] < lowlink[v]) {
 					lowlink[v] = lowlink[w]
 				}
-			}
-			else if stacked.Bit(w) == 1 {
+			} else if stacked.Bit(w) == 1 {
 				if lowlink[v] > index[w] {
 					lowlink[v] = index[w]
 				}
@@ -57,10 +56,10 @@ func tarjanscc(g [][]int, emit func([]int)) {
 			for {
 				last := len(s) - 1
 				w := s[last]
-				s := s[:last]
+				s = s[:last]
 				stacked.SetBit(&stacked, w, 0)
-				comp.append(w)
-				if w == n {
+				comp = append(comp, w)
+				if w == v {
 					emit(comp)
 					break
 				}
@@ -70,12 +69,11 @@ func tarjanscc(g [][]int, emit func([]int)) {
 		return true
 	}
 
-	for v in := range g {
+	for v := range g {
 		if visited.Bit(v) == 0 {
 			scc(v)
 		}
 	}
 
-	return
 }
 
